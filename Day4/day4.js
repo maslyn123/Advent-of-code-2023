@@ -37,17 +37,34 @@ function calculatePoints(cards) {
     return totalPoints;
 }
 
+function countMatches(card) {
+    return card.winningNumbers.filter(number => card.playerNumbers.includes(number)).length;
+}
+
+function processCards(cards) {
+    let cardCounts = new Array(cards.length).fill(1); // Start with 1 instance of each card
+
+    for (let i = 0; i < cards.length; i++) {
+        const matches = countMatches(cards[i]);
+        for (let j = i + 1; j <= i + matches && j < cards.length; j++) {
+            cardCounts[j] += cardCounts[i];
+        }
+    }
+
+    return cardCounts.reduce((sum, count) => sum + count, 0); // Sum up all card counts
+}
+
 
 
 
 
 // Example input 
-const exampleInput = `41 48 83 86 17 | 83 86  6 31 17  9 48 53
-13 32 20 16 61 | 61 30 68 82 17 32 24 19
-1 21 53 59 44 | 69 82 63 72 16 21 14  1
-41 92 73 84 69 | 59 84 76 51 58  5 54 83
-87 83 26 28 32 | 88 30 70 12 93 22 82 36
-31 18 13 56 72 | 74 77 10 23 35 67 36 11`;
+const exampleInput = `Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
+Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
+Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
+Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
+Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
+Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11`;
 
 const input = `Card   1: 33 56 23 64 92 86 94  7 59 13 | 86 92 64 43 10 70 16 55 79 33 56  8  7 25 82 14 31 96 94 13 99 29 69 75 23
 Card   2: 61 66 75  1 27 38 93 90 34 43 | 94 46 62 49 35 88 45 70 15 22 20 86 56 38 64 98 50  6 79 11 13 93 92 60 16
@@ -261,5 +278,7 @@ Card 206: 74 30 29 66 68  2  3 34 79 87 | 63 45 88 78 98 27 97 32 38 75  9 11 71
 
 
 const cards = getCards(input);
-const totalPoints = calculatePoints(cards);
-console.log(totalPoints);  
+//const totalPoints = calculatePoints(cards);
+const totalCards = processCards(cards)
+// console.log(totalPoints);  
+console.log(totalCards)
